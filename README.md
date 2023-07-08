@@ -1,5 +1,5 @@
 # HotelBudapeste
-Sistema para cadastro de novos clientes do hotel realizado com a linguagem Python e o SQlite,
+# Sistema desktop para cadastro de novos clientes do hotel realizado com a linguagem Python (utilizando tkinter) e o SQlite.
 
 # Sistema para uso interno do hotel, utilizando comandos básicos do CRUD.
 # Desenvolvido em algumas horas em equipe, realizamos a confecção da logo e paleta de cores que remete ao luxo e curiosidade.
