@@ -22,6 +22,8 @@ class ModeloTelaPrincipal(Banco):
 
         
         self.criar_tabela()
+        self.frames_cadastro = []
+
 
     #--------------------- Título ---------
         '''self.titulo = customtkinter.CTkLabel(self.janela,
@@ -154,15 +156,17 @@ class ModeloTelaPrincipal(Banco):
         
 #---------------------------FUNÇÕES-----------------------------
     
-    def aviso(self):
-                
+    def aviso(self, numero_quarto):
         frame = Frame(self.janela, bg='#F2A516', width=140, height=80)
-        frame.place(x=800, y=50)
+        frame.place(x=800, y=len(self.frames_cadastro) * 50 + 50)
         fonte = font.Font(size=12)
         
         # Criando o widget Label dentro do frame
-        label = Label(frame, text="RESERVADO" + "\nQuarto" + self.caixa_quarto.get(), fg='black', bg='#F2A516', wraplength=200, font=fonte)
+        label = Label(frame, text="RESERVADO\nQuarto " + numero_quarto, fg='black', bg='#F2A516', wraplength=200, font=fonte)
         label.pack(fill='both', expand=True)
+
+        # Adicionando o frame à lista de frames de cadastro
+        self.frames_cadastro.append(frame)
         
     def verificar_quarto_ocupado(self, quarto):
         self.conecta_banco()
@@ -172,51 +176,44 @@ class ModeloTelaPrincipal(Banco):
         return resultado is not None
 
 
-    #conectar as novas variáveis
     def cadastrar(self):
-        #conectar as variaveis de cadastro
         self.capturar_nome = self.caixa_nome.get()
         self.capturar_email = self.caixa_email.get()
         self.capturar_contato = self.caixa_contato.get()
         self.capturar_cpf = self.caixa_cpf.get()
         self.capturar_data = self.caixa_data.get()
         self.capturar_quarto = self.caixa_quarto.get()
-        
-        if self.verificar_quarto_ocupado(self.capturar_quarto):
-            messagebox.showwarning('Quarto Ocupado', 'Esse quarto já está ocupado.')
-            return
-        
+
         if len(self.capturar_quarto) != 2:
             messagebox.showwarning('Quarto Inválido', 'O número do quarto deve conter apenas dois dígitos.')
             return
 
-
+        if self.verificar_quarto_ocupado(self.capturar_quarto):
+            messagebox.showwarning('Quarto Ocupado', 'Esse quarto já está ocupado.')
+            return
 
         self.conecta_banco()
         self.sql.execute('''INSERT INTO hospedes (nome_hospede, email_hospede,cpf_hospede, contato_hospede, data_hospede, quarto_hospede) 
                          values(?,?,?,?,?,?) ''', (self.capturar_nome, self.capturar_email, self.capturar_cpf, self.capturar_contato,
                                                self.capturar_data, self.capturar_quarto))
-        
-        
-       
+
         try:
             if self.capturar_nome == '' or self.capturar_email == '' or self.capturar_cpf == '' or self.capturar_contato == '' or self.capturar_data == '' or self.capturar_quarto == '':
-              
                 messagebox.showerror('Sistema de cadastro', 'Preencha todos os campos!')
             else:
                 self.conexao.commit()
                 messagebox.showinfo('Cadastro', f'Parabéns! Dados Salvos!')
                 self.mostrar_dados()
                 self.desconecta_banco()
-                self.aviso()
+                self.aviso(self.capturar_quarto)
                 self.limpar_dados()
         except:
             messagebox.showerror('Cadastro', 'Erro no processamento do seu cadastro.')
             self.desconecta_banco()
             self.limpar_dados()
-            
 
         self.desconecta_banco()
+
 
 
     def mostrar_dados(self): #conectar variáveis
