@@ -163,6 +163,13 @@ class ModeloTelaPrincipal(Banco):
         # Criando o widget Label dentro do frame
         label = Label(frame, text="RESERVADO" + "\nQuarto" + self.caixa_quarto.get(), fg='black', bg='#F2A516', wraplength=200, font=fonte)
         label.pack(fill='both', expand=True)
+        
+    def verificar_quarto_ocupado(self, quarto):
+        self.conecta_banco()
+        self.sql.execute("SELECT * FROM hospedes WHERE quarto_hospede = ?", (quarto,))
+        resultado = self.sql.fetchone()
+        self.desconecta_banco()
+        return resultado is not None
 
 
     #conectar as novas variáveis
@@ -174,11 +181,17 @@ class ModeloTelaPrincipal(Banco):
         self.capturar_cpf = self.caixa_cpf.get()
         self.capturar_data = self.caixa_data.get()
         self.capturar_quarto = self.caixa_quarto.get()
+        
+        if self.verificar_quarto_ocupado(self.capturar_quarto):
+            messagebox.showwarning('Quarto Ocupado', 'Esse quarto já está ocupado.')
+            return
 
         self.conecta_banco()
         self.sql.execute('''INSERT INTO hospedes (nome_hospede, email_hospede,cpf_hospede, contato_hospede, data_hospede, quarto_hospede) 
                          values(?,?,?,?,?,?) ''', (self.capturar_nome, self.capturar_email, self.capturar_cpf, self.capturar_contato,
                                                self.capturar_data, self.capturar_quarto))
+        
+        
        
         try:
             if self.capturar_nome == '' or self.capturar_email == '' or self.capturar_cpf == '' or self.capturar_contato == '' or self.capturar_data == '' or self.capturar_quarto == '':
