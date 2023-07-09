@@ -152,7 +152,7 @@ class ModeloTelaPrincipal(Banco):
         text='Pesquisar', text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.pesquisar_dados)
         self.botao_pesquisa.place(x=400, y=500)
         
-    
+#---------------------------FUNÇÕES-----------------------------
     
     def aviso(self):
                 
@@ -185,6 +185,12 @@ class ModeloTelaPrincipal(Banco):
         if self.verificar_quarto_ocupado(self.capturar_quarto):
             messagebox.showwarning('Quarto Ocupado', 'Esse quarto já está ocupado.')
             return
+        
+        if len(self.capturar_quarto) != 2:
+            messagebox.showwarning('Quarto Inválido', 'O número do quarto deve conter apenas dois dígitos.')
+            return
+
+
 
         self.conecta_banco()
         self.sql.execute('''INSERT INTO hospedes (nome_hospede, email_hospede,cpf_hospede, contato_hospede, data_hospede, quarto_hospede) 
@@ -304,7 +310,7 @@ class ModeloTelaPrincipal(Banco):
             self.caixa_quarto.insert(END, coluna6)
             self.caixa_data.insert(END, coluna7)
 
-
+#Feito por Micaelle Silva :)
 
 #----------------------- Chamando a classe ModeloSistema -----------------
 windows = Tk()
