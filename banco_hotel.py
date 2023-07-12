@@ -1,8 +1,10 @@
+import tkinter
 import customtkinter
 from caixa import Banco
 from tkinter import ttk, font
 from tkinter import messagebox
 from tkinter import *
+import re
 
 class ModeloTelaPrincipal(Banco):
     def __init__(self, windows):
@@ -52,6 +54,7 @@ class ModeloTelaPrincipal(Banco):
         placeholder_text='Digite o cpf',
         width=200, height=30,
         fg_color='black', border_color= '#8C694A', border_width= 0, text_color= 'white')
+        self.caixa_cpf.bind('<KeyRelease>', self.formatar_cpf)
         self.caixa_cpf.place(x=250, y=120)
         
         self.data = customtkinter.CTkLabel(self.janela,text='Data',
@@ -62,6 +65,7 @@ class ModeloTelaPrincipal(Banco):
         self.caixa_data = customtkinter.CTkEntry(self.janela,placeholder_text='Digite a data de cadastro',
         width=200, height=30,
         fg_color='black', border_width= 0, text_color= 'white' )
+        self.caixa_data.bind('<KeyRelease>', self.formatar_data)
         self.caixa_data.place(x=250, y= 190)
         
         
@@ -81,6 +85,7 @@ class ModeloTelaPrincipal(Banco):
         self.caixa_contato = customtkinter.CTkEntry(self.janela,placeholder_text='Digite o contato',
         width=200, height=30,
         fg_color='black', border_width= 0, text_color= 'white' )
+        self.caixa_contato.bind('<KeyRelease>', self.formatar_celular)
         self.caixa_contato.place(x=500, y= 120)
         
         self.quarto = customtkinter.CTkLabel(self.janela,text='Quarto',
@@ -99,13 +104,13 @@ class ModeloTelaPrincipal(Banco):
         self.relatorio = ttk.Treeview(self.janela, columns=('id', 'nome_hospede', 'email_hospede',
                                                             'cpf_hospede', 'contato_hospede', 'quarto_hospede', 'data_hospede'),
                                       show='headings')
-        self.relatorio.column('id', minwidth=50, width=30)
-        self.relatorio.column('nome_hospede', minwidth=50, width=50)
-        self.relatorio.column('email_hospede', minwidth=50, width=50)
-        self.relatorio.column('cpf_hospede', minwidth=50, width=50)
-        self.relatorio.column('contato_hospede', minwidth=50, width=50)
-        self.relatorio.column('quarto_hospede', minwidth=50, width=50)
-        self.relatorio.column('data_hospede', minwidth=50, width=50)
+        self.relatorio.column('id', minwidth=50, width=70)
+        self.relatorio.column('nome_hospede', minwidth=50, width=70)
+        self.relatorio.column('email_hospede', minwidth=50, width=70)
+        self.relatorio.column('cpf_hospede', minwidth=50, width=70)
+        self.relatorio.column('contato_hospede', minwidth=50, width=70)
+        self.relatorio.column('quarto_hospede', minwidth=50, width=70)
+        self.relatorio.column('data_hospede', minwidth=50, width=70)
 
         self.relatorio.heading('id', text='ID')
         self.relatorio.heading('nome_hospede', text='NOME')
@@ -126,19 +131,19 @@ class ModeloTelaPrincipal(Banco):
         self.botao_cadastrar = customtkinter.CTkButton(self.janela,
         text='Cadastrar',
          text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.cadastrar)
-        self.botao_cadastrar.place(x=400, y=240) #ativar função de cadastro
+        self.botao_cadastrar.place(x=560, y=240) #ativar função de cadastro
 
         self.botao_atualizar = customtkinter.CTkButton(self.janela,
         text='Atualizar', text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.atualizar_dados)
-        self.botao_atualizar .place(x=400, y=350)
+        self.botao_atualizar .place(x=560, y=350)
 
         self.botao_deletar= customtkinter.CTkButton(self.janela,
         text='Deletar', text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.deletar_dados)
-        self.botao_deletar.place(x=400, y=400)
+        self.botao_deletar.place(x=560, y=400)
         
         self.voltar = customtkinter.CTkButton(self.janela,
         text='Lista completa', text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.mostrar_dados)
-        self.voltar.place(x=400, y=300)
+        self.voltar.place(x=560, y=300)
 
  
         # -------------- PESQUISANDO DADOS -------------------
@@ -146,19 +151,20 @@ class ModeloTelaPrincipal(Banco):
         self.label_pesquisa = customtkinter.CTkLabel(self.janela,
         text= 'PESQUISA DE CLIENTE',
         font=('times', 15, 'bold'), text_color= '#F2A516')
-        self.label_pesquisa.place(x=390, y=440)
+        self.label_pesquisa.place(x=550, y=440)
 
         self.caixa_pesquisa = customtkinter.CTkEntry(self.janela, placeholder_text='Digite o cpf')
-        self.caixa_pesquisa.place(x=400, y=470), 
+        self.caixa_pesquisa.place(x=560, y=470),
+        self.caixa_cpf.bind('<KeyRelease>', self.formatar_cpf)
         self.botao_pesquisa = customtkinter.CTkButton(self.janela,
         text='Pesquisar', text_color= '#F2A516', fg_color= 'black', hover_color= 'white', font=('times', 15, 'bold'), command=self.pesquisar_dados)
-        self.botao_pesquisa.place(x=400, y=500)
+        self.botao_pesquisa.place(x=560, y=500)
         
 #---------------------------FUNÇÕES-----------------------------
     
     def aviso(self, numero_quarto):
         frame = Frame(self.janela, bg='#F2A516', width=140, height=80)
-        frame.place(x=800, y=len(self.frames_cadastro) * 50 + 50)
+        frame.place(x=800, y=len(self.frames_cadastro) * 50 + 30)
         fonte = font.Font(size=12)
         
         # Criando o widget Label dentro do frame
@@ -167,6 +173,25 @@ class ModeloTelaPrincipal(Banco):
 
         # Adicionando o frame à lista de frames de cadastro
         self.frames_cadastro.append(frame)
+
+
+    def formatar_cpf(self, event):
+        texto = self.caixa_cpf.get()
+        texto_formatado = re.sub(r'(\d{3})(\d{3})(\d{3})(\d{2})', r'\1.\2.\3-\4', texto)
+        self.caixa_cpf.delete(0, tkinter.END)
+        self.caixa_cpf.insert(tkinter.END, texto_formatado)
+
+    def formatar_data(self, event):
+        texto = self.caixa_data.get()
+        texto_formatado = re.sub(r'(\d{2})(\d{2})(\d{4})', r'\1/\2/\3', texto)
+        self.caixa_data.delete(0, tkinter.END)
+        self.caixa_data.insert(tkinter.END, texto_formatado)
+
+    def formatar_celular(self, event):
+        texto = self.caixa_contato.get()
+        texto_formatado = re.sub(r'(\d{2})(\d{5})(\d{4})', r'(\1) \2-\3', texto)
+        self.caixa_contato.delete(0, tkinter.END)
+        self.caixa_contato.insert(tkinter.END, texto_formatado)
         
     def verificar_quarto_ocupado(self, quarto):
         self.conecta_banco()
@@ -184,8 +209,8 @@ class ModeloTelaPrincipal(Banco):
         self.capturar_data = self.caixa_data.get()
         self.capturar_quarto = self.caixa_quarto.get()
 
-        if len(self.capturar_quarto) != 2:
-            messagebox.showwarning('Quarto Inválido', 'O número do quarto deve conter apenas dois dígitos.')
+        if len(self.capturar_quarto) != 1:
+            messagebox.showwarning('Quarto Inválido', 'O número do quarto deve conter apenas um dígito.')
             return
 
         if self.verificar_quarto_ocupado(self.capturar_quarto):
