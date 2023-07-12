@@ -6,6 +6,7 @@ from tkinter import messagebox
 from tkinter import *
 import re
 
+
 class ModeloTelaPrincipal(Banco):
     def __init__(self, windows):
         self.janela = windows
@@ -26,14 +27,6 @@ class ModeloTelaPrincipal(Banco):
         self.criar_tabela()
         self.frames_cadastro = []
 
-
-    #--------------------- Título ---------
-        '''self.titulo = customtkinter.CTkLabel(self.janela,
-        text='Cadastro de Hóspedes',
-        font=('Poppins Bold', 25, 'italic'),
-        text_color='white', fg_color= '#242424')
-        self.titulo.place(x=10, y= 20)'''
-    #---------------------- Labels e caixas de textos --------------------
         self.label_nome = customtkinter.CTkLabel(self.janela,
         text='Nome',
         font=('times', 20, 'italic'), text_color= '#F2A516', fg_color= '#242424')
@@ -60,14 +53,12 @@ class ModeloTelaPrincipal(Banco):
         self.data = customtkinter.CTkLabel(self.janela,text='Data',
         font=('times', 20, 'italic'), text_color= '#F2A516', fg_color= '#242424')
         self.data.place(x= 250, y= 160)
-               
         
         self.caixa_data = customtkinter.CTkEntry(self.janela,placeholder_text='Digite a data de cadastro',
         width=200, height=30,
         fg_color='black', border_width= 0, text_color= 'white' )
         self.caixa_data.bind('<KeyRelease>', self.formatar_data)
         self.caixa_data.place(x=250, y= 190)
-        
         
         self.email = customtkinter.CTkLabel(self.janela,text='Email',
         font=('times', 20, 'italic'), text_color= '#F2A516', fg_color= '#242424')
@@ -199,7 +190,7 @@ class ModeloTelaPrincipal(Banco):
         resultado = self.sql.fetchone()
         self.desconecta_banco()
         return resultado is not None
-
+    
 
     def cadastrar(self):
         self.capturar_nome = self.caixa_nome.get()
@@ -208,6 +199,7 @@ class ModeloTelaPrincipal(Banco):
         self.capturar_cpf = self.caixa_cpf.get()
         self.capturar_data = self.caixa_data.get()
         self.capturar_quarto = self.caixa_quarto.get()
+
 
         if len(self.capturar_quarto) != 1:
             messagebox.showwarning('Quarto Inválido', 'O número do quarto deve conter apenas um dígito.')
@@ -232,13 +224,14 @@ class ModeloTelaPrincipal(Banco):
                 self.desconecta_banco()
                 self.aviso(self.capturar_quarto)
                 self.limpar_dados()
+
+                
         except:
             messagebox.showerror('Cadastro', 'Erro no processamento do seu cadastro.')
             self.desconecta_banco()
             self.limpar_dados()
 
         self.desconecta_banco()
-
 
 
     def mostrar_dados(self): #conectar variáveis
@@ -261,10 +254,18 @@ class ModeloTelaPrincipal(Banco):
             messagebox.showinfo('Exclusão', 'Dados removidos com Sucesso!')
             self.mostrar_dados()
             self.desconecta_banco()
+
+            if len(self.frames_cadastro) > 0:
+                frame = self.frames_cadastro[-1]
+                self.remover_frame(frame)
         except IndexError:
             messagebox.showerror('Exclusão', 'Selecione um dado para excluir')
         self.desconecta_banco()
 
+
+    def remover_frame(self, frame):
+        frame.destroy()
+        self.frames_cadastro.remove(frame)
 
     def atualizar_dados(self):
         try:
