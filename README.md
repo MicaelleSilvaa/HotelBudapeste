@@ -1,6 +1,6 @@
 # HotelBudapeste
-Sistema desktop para cadastro de novos clientes do hotel realizado com a linguagem Python (utilizando tkinter) e o SQlite.
+Desktop system for registering new hotel clients, made with Python (using tkinter) and SQlite.
 
-Sistema para uso interno do hotel, utilizando comandos básicos do CRUD.
-Desenvolvido em algumas horas, a equipe realizou a confecção da logo e paleta de cores que remete ao luxo e curiosidade.
-No sistema o usuário é capaz de cadastrar um novo hospede, atualizar, deletar e listar. Quando um novo hospede é cadastrado, um frame aparece do lado direito informando que a reserva está realizada e o número do quarto.
+System for internal hotel use, using basic CRUD commands.
+Developed in a few hours, the team made the logo and color palette, which is reminiscent of luxury and curiosity.
+In the system, the user can register a new guest, update, delete and list. When a new guest is registered, a frame appears on the right-hand side informing them that the reservation has been made and the room number.
